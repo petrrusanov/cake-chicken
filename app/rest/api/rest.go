@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dimebox/cake-chicken/app/store/service"
-	"github.com/dimebox/cake-chicken/app/utils"
+	"github.com/petrrusanov/cake-chicken/app/store/service"
+	"github.com/petrrusanov/cake-chicken/app/utils"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"

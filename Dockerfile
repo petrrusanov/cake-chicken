@@ -24,11 +24,11 @@ RUN \
     go get -u -v github.com/stretchr/testify && \
     go get -u -v github.com/vektra/mockery/.../
 
-WORKDIR /go/src/github.com/dimebox/cake-chicken
+WORKDIR /go/src/github.com/petrrusanov/cake-chicken
 
-ADD app /go/src/github.com/dimebox/cake-chicken/app
-ADD vendor /go/src/github.com/dimebox/cake-chicken/vendor
-ADD .git /go/src/github.com/dimebox/cake-chicken/.git
+ADD app /go/src/github.com/petrrusanov/cake-chicken/app
+ADD vendor /go/src/github.com/petrrusanov/cake-chicken/vendor
+ADD .git /go/src/github.com/petrrusanov/cake-chicken/.git
 ADD git-rev.sh /script/git-rev.sh
 
 RUN chmod +x /script/git-rev.sh
@@ -49,7 +49,7 @@ FROM umputun/baseimage:app-latest
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-COPY --from=build-backend /go/src/github.com/dimebox/cake-chicken/backend /srv/backend
+COPY --from=build-backend /go/src/github.com/petrrusanov/cake-chicken/backend /srv/backend
 RUN chown -R app:app /srv
 RUN ln -s /srv/backend /usr/bin/backend
 

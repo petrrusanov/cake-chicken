@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/logutils"
 	"github.com/jessevdk/go-flags"
 
-	"github.com/dimebox/cake-chicken/app/cmd"
-	"github.com/dimebox/cake-chicken/app/utils"
+	"github.com/petrrusanov/cake-chicken/app/cmd"
+	"github.com/petrrusanov/cake-chicken/app/utils"
 )
 
 // Opts with all cli commands and flags

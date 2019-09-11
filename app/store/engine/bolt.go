@@ -2,7 +2,7 @@ package engine
 
 import (
 	"fmt"
-	"github.com/dimebox/cake-chicken/app/store/models"
+	"github.com/petrrusanov/cake-chicken/app/store/models"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 	"strconv"

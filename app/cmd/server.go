@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/dimebox/cake-chicken/app/rest/api"
-	"github.com/dimebox/cake-chicken/app/store/engine"
-	"github.com/dimebox/cake-chicken/app/store/service"
+	"github.com/petrrusanov/cake-chicken/app/rest/api"
+	"github.com/petrrusanov/cake-chicken/app/store/engine"
+	"github.com/petrrusanov/cake-chicken/app/store/service"
 	"github.com/pkg/errors"
 )
 

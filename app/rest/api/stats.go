@@ -3,7 +3,7 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/dimebox/cake-chicken/app/rest"
+	"github.com/petrrusanov/cake-chicken/app/rest"
 	"net/http"
 	"strings"
 )

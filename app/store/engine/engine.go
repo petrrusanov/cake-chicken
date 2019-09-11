@@ -1,6 +1,6 @@
 package engine
 
-import "github.com/dimebox/cake-chicken/app/store/models"
+import "github.com/petrrusanov/cake-chicken/app/store/models"
 
 // Interface combines all store interfaces
 type Interface interface {
