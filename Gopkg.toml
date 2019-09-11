@@ -1,5 +1,5 @@
 [metadata.heroku]
-  root-package = "gitlab.com/petrrusanov/cake-chicken"
+  root-package = "github.com/petrrusanov/cake-chicken"
   go-version = "1.13"
 
 [prune]

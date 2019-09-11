@@ -21,14 +21,6 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:e62657cca9badaa308d86e7716083e4c5933bb78e30a17743fc67f50be26f6f4"
-  name = "github.com/gorilla/websocket"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "c3e18be99d19e6b3e8f1559eea2c161a665c4b6b"
-  version = "v1.4.1"
-
-[[projects]]
   digest = "1:16ae35b3a854c667baaf55ff5d455c486f7c2baf040a2727f2ef0e4b096b2a95"
   name = "github.com/hashicorp/logutils"
   packages = ["."]
@@ -43,19 +35,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "c0795c8afcf41dd1d786bebce68636c199b3bb45"
-
-[[projects]]
-  digest = "1:3b68aaa159109450b5c0c79e40a02347db7ceb10bb8758687898f7e57d355cf7"
-  name = "github.com/nlopes/slack"
-  packages = [
-    ".",
-    "internal/errorsx",
-    "internal/timex",
-    "slackutilsx",
-  ]
-  pruneopts = "UT"
-  revision = "1af34b6bda3d43878255fff7bd2884ea0c23295e"
-  version = "v0.6.0"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -90,7 +69,6 @@
     "github.com/go-chi/render",
     "github.com/hashicorp/logutils",
     "github.com/jessevdk/go-flags",
-    "github.com/nlopes/slack",
     "github.com/pkg/errors",
     "go.etcd.io/bbolt",
   ]
