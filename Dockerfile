@@ -1,4 +1,4 @@
-FROM golang:1.11-alpine as build-backend
+FROM golang:1.13-alpine as build-backend
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
@@ -24,11 +24,11 @@ RUN \
     go get -u -v github.com/stretchr/testify && \
     go get -u -v github.com/vektra/mockery/.../
 
-WORKDIR /go/src/github.com/boilerplate/backend
+WORKDIR /go/src/github.com/dimebox/cake-chicken
 
-ADD app /go/src/github.com/boilerplate/backend/app
-ADD vendor /go/src/github.com/boilerplate/backend/vendor
-ADD .git /go/src/github.com/boilerplate/backend/.git
+ADD app /go/src/github.com/dimebox/cake-chicken/app
+ADD vendor /go/src/github.com/dimebox/cake-chicken/vendor
+ADD .git /go/src/github.com/dimebox/cake-chicken/.git
 ADD git-rev.sh /script/git-rev.sh
 
 RUN chmod +x /script/git-rev.sh
@@ -42,19 +42,20 @@ RUN gometalinter --disable-all --deadline=300s --vendor --enable=vet --enable=ve
 RUN \
     version=$(/script/git-rev.sh) && \
     echo "version $version" && \
-    go build -o app -ldflags "-X main.revision=${version} -s -w" ./app
+    go build -o backend -ldflags "-X main.revision=${version} -s -w" ./app
 
 FROM umputun/baseimage:app-latest
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-COPY --from=build-backend /go/src/github.com/boilerplate/backend/backend /srv/backend
+COPY --from=build-backend /go/src/github.com/dimebox/cake-chicken/backend /srv/backend
 RUN chown -R app:app /srv
 RUN ln -s /srv/backend /usr/bin/backend
 
+RUN mkdir -p /data/db
+
 EXPOSE 3000
-EXPOSE 4000
 
 HEALTHCHECK --interval=30s --timeout=3s CMD curl --fail http://localhost:3000/ping || exit 1
 

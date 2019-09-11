@@ -6,20 +6,17 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
-	"github.com/boilerplate/backend/app/rest/api"
-	"github.com/boilerplate/backend/app/rest/auth"
-	"github.com/boilerplate/backend/app/store/engine"
-	"github.com/boilerplate/backend/app/store/service"
-	"github.com/go-pkgz/mongo"
+	"github.com/dimebox/cake-chicken/app/rest/api"
+	"github.com/dimebox/cake-chicken/app/store/engine"
+	"github.com/dimebox/cake-chicken/app/store/service"
 	"github.com/pkg/errors"
 )
 
 // ServerCommand with command line flags and env
 type ServerCommand struct {
 	Store StoreGroup `group:"store" namespace:"store" env-namespace:"STORE"`
-	Mongo MongoGroup `group:"mongo" namespace:"mongo" env-namespace:"MONGO"`
+	Bolt BoltGroup `group:"bolt" namespace:"bolt" env-namespace:"BOLT"`
 
 	HTTPPort int `long:"httpPort" env:"HTTP_PORT" default:"3000" description:"HTTP port"`
 
@@ -28,13 +25,12 @@ type ServerCommand struct {
 
 // StoreGroup defines options group for storage
 type StoreGroup struct {
-	Type string `long:"type" env:"TYPE" description:"type of storage" choice:"mongo" default:"mongo"`
+	Type string `long:"type" env:"TYPE" description:"type of storage" choice:"bolt" default:"bolt"`
 }
 
-// MongoGroup holds all mongo params, used by store
-type MongoGroup struct {
-	URL string `long:"url" env:"URL" default:"localhost" description:"mongo url"`
-	DB  string `long:"db" env:"DB" default:"backend" description:"mongo database name"`
+// BoltGroup holds all bolt params, used by store
+type BoltGroup struct {
+	Path  string `long:"db" env:"PATH" description:"bolt database path"`
 }
 
 type serverApp struct {
@@ -89,7 +85,6 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 		Version:       Revision,
 		SharedSecret:  s.SharedSecret,
 		DataStore:     dataStore,
-		Authenticator: auth.Authenticator{DataStore: dataStore},
 	}
 
 	return &serverApp{
@@ -102,31 +97,15 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 func (s *ServerCommand) makeStoreEngine() (engine.Interface, error) {
 	switch s.Store.Type {
-	case "mongo":
-		mgServer, err := s.makeMongo()
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to create mongo server")
+	case "bolt":
+		if s.Bolt.Path == "" {
+			return nil, errors.New("no bolt path provided")
 		}
 
-		conn := mongo.NewConnection(mgServer, s.Mongo.DB, "")
-
-		return engine.NewMongo(conn, 500, 100*time.Millisecond)
+		return engine.NewBolt(s.Bolt.Path)
 	default:
 		return nil, errors.Errorf("unsupported store type %s", s.Store.Type)
 	}
-}
-
-func (s *ServerCommand) makeMongo() (result *mongo.Server, err error) {
-	if s.Mongo.URL == "" {
-		return nil, errors.New("no mongo url provided")
-	}
-
-	if s.Mongo.DB == "" {
-		return nil, errors.New("no mongo db provided")
-	}
-
-	return mongo.NewServerWithURL(s.Mongo.URL, 10*time.Second)
 }
 
 // Run all application objects

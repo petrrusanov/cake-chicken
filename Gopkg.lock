@@ -2,28 +2,6 @@
 
 
 [[projects]]
-  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
-  name = "github.com/davecgh/go-spew"
-  packages = ["spew"]
-  pruneopts = "UT"
-  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
-  version = "v1.1.1"
-
-[[projects]]
-  branch = "master"
-  digest = "1:78102ee4d536347316bc42e818340cc50902e45dbd7fdd524c5a1fc0cb07b588"
-  name = "github.com/globalsign/mgo"
-  packages = [
-    ".",
-    "bson",
-    "internal/json",
-    "internal/sasl",
-    "internal/scram",
-  ]
-  pruneopts = "UT"
-  revision = "eeefdecb41b842af6dc652aaea4026e8403e62df"
-
-[[projects]]
   digest = "1:58c033da727ebd5a6769209e479cac9a6e4dab53c879631af3d8161423099d57"
   name = "github.com/go-chi/chi"
   packages = [
@@ -43,28 +21,12 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:9a786e82ea0127f3d40651bd91837760ac24f79db84d99124aae705f573c482b"
-  name = "github.com/go-pkgz/lgr"
+  digest = "1:e62657cca9badaa308d86e7716083e4c5933bb78e30a17743fc67f50be26f6f4"
+  name = "github.com/gorilla/websocket"
   packages = ["."]
   pruneopts = "UT"
-  revision = "b9d89c4c7bf3834787f02d2b891147b4cd6073c7"
-  version = "v0.6.3"
-
-[[projects]]
-  digest = "1:62aeed92576ea10c25389334254f957594b4b5ae8ff71a53d3aa9df5dc6961eb"
-  name = "github.com/go-pkgz/mongo"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "b39a3946e96d28d96eb54d7a8400d80134302f69"
-  version = "v1.1.2"
-
-[[projects]]
-  digest = "1:582b704bebaa06b48c29b0cec224a6058a09c86883aaddabde889cd1a5f73e1b"
-  name = "github.com/google/uuid"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
-  version = "v1.1.1"
+  revision = "c3e18be99d19e6b3e8f1559eea2c161a665c4b6b"
+  version = "v1.4.1"
 
 [[projects]]
   digest = "1:16ae35b3a854c667baaf55ff5d455c486f7c2baf040a2727f2ef0e4b096b2a95"
@@ -83,6 +45,19 @@
   revision = "c0795c8afcf41dd1d786bebce68636c199b3bb45"
 
 [[projects]]
+  digest = "1:3b68aaa159109450b5c0c79e40a02347db7ceb10bb8758687898f7e57d355cf7"
+  name = "github.com/nlopes/slack"
+  packages = [
+    ".",
+    "internal/errorsx",
+    "internal/timex",
+    "slackutilsx",
+  ]
+  pruneopts = "UT"
+  revision = "1af34b6bda3d43878255fff7bd2884ea0c23295e"
+  version = "v0.6.0"
+
+[[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -91,46 +66,33 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
-  name = "github.com/pmezard/go-difflib"
-  packages = ["difflib"]
-  pruneopts = "UT"
-  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
-  version = "v1.0.0"
-
-[[projects]]
-  digest = "1:99d32780e5238c2621fff621123997c3e3cca96db8be13179013aea77dfab551"
-  name = "github.com/stretchr/testify"
-  packages = [
-    "assert",
-    "require",
-  ]
-  pruneopts = "UT"
-  revision = "221dbe5ed46703ee255b1da0dec05086f5035f62"
-  version = "v1.4.0"
-
-[[projects]]
-  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
-  name = "gopkg.in/yaml.v2"
+  digest = "1:f2ac2c724fc8214bb7b9dd6d4f5b7a983152051f5133320f228557182263cb94"
+  name = "go.etcd.io/bbolt"
   packages = ["."]
   pruneopts = "UT"
-  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
-  version = "v2.2.2"
+  revision = "a0458a2b35708eef59eb5f620ceb3cd1c01a824d"
+  version = "v1.3.3"
+
+[[projects]]
+  branch = "master"
+  digest = "1:9a9d873379b3a947a4a1606caea86ce9c4aec8e5b0fae406c5785b052664eb16"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  pruneopts = "UT"
+  revision = "bbd175535a8b9969bb0b33f1502f681ee0b122bd"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/globalsign/mgo",
-    "github.com/globalsign/mgo/bson",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
     "github.com/go-chi/render",
-    "github.com/go-pkgz/mongo",
-    "github.com/google/uuid",
     "github.com/hashicorp/logutils",
     "github.com/jessevdk/go-flags",
+    "github.com/nlopes/slack",
     "github.com/pkg/errors",
+    "go.etcd.io/bbolt",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -7,26 +7,25 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"sync"
 	"time"
 
-	"github.com/boilerplate/backend/app/rest/auth"
-	"github.com/boilerplate/backend/app/store/service"
-	"github.com/boilerplate/backend/app/utils"
+	"github.com/dimebox/cake-chicken/app/store/service"
+	"github.com/dimebox/cake-chicken/app/utils"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 	"github.com/pkg/errors"
 )
 
-const hardBodyLimit = 1024 * 64 // limit size of body
+var usernameRegexp = regexp.MustCompile(`<(@[\d\w]+)(\|[\w\d]+)?>`)
 
 // Rest is a rest access server
 type Rest struct {
 	Version       string
 	SharedSecret  string
 	DataStore     *service.DataStore
-	Authenticator auth.Authenticator
 
 	httpServer *http.Server
 	lock       sync.Mutex
@@ -77,20 +76,18 @@ func (s *Rest) Shutdown() {
 func (s *Rest) routes() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.Throttle(1000), middleware.Timeout(60*time.Second))
-	router.Use(AppInfo("Backend", s.Version), Ping)
+	router.Use(AppInfo("Cake and chicken", s.Version), Ping)
 
 	ipFn := func(ip string) string { return utils.StrongHashValue(ip, s.SharedSecret)[:12] } // logger uses it for anonymization
 
-	router.Route("/api/", func(rapi chi.Router) {
+	router.Route("/", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
 			ropen.Use(Logger(ipFn, LogBody))
-			ropen.Post("/users/", s.createUser)
-		})
-
-		rapi.Group(func(rauth chi.Router) {
-			rauth.Use(s.Authenticator.Auth(true))
-			rauth.Use(Logger(ipFn, LogAll))
-			rauth.Get("/users/me", s.getCurrentUser)
+			ropen.Post("/stats", s.stats)
+			ropen.Post("/cake/add", s.addCake)
+			ropen.Post("/cake/fulfill", s.fulfillCake)
+			ropen.Post("/chicken/add", s.addChicken)
+			ropen.Post("/chicken/fulfill", s.fulfillChicken)
 		})
 	})
 

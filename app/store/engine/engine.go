@@ -1,14 +1,23 @@
 package engine
 
-import "github.com/boilerplate/backend/app/store/models"
+import "github.com/dimebox/cake-chicken/app/store/models"
 
 // Interface combines all store interfaces
 type Interface interface {
-	User
+	Chicken
+	Cake
 }
 
-// User user profile methods
-type User interface {
-	FindUser(token string) (models.User, error)
-	CreateUser(user models.User) (models.User, error)
+// Chicken chicken methods
+type Chicken interface {
+	AddChicken(username string, prefix string) (models.UserCounter, error)
+	FulfillChicken(username string, prefix string) (models.UserCounter, error)
+	GetChickenStats(prefix string) ([]models.UserCounter, error)
+}
+
+// Cake chicken methods
+type Cake interface {
+	AddCake(username string, prefix string) (models.UserCounter, error)
+	FulfillCake(username string, prefix string) (models.UserCounter, error)
+	GetCakeStats(prefix string) ([]models.UserCounter, error)
 }

@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/base64"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,7 +13,6 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/middleware"
-	"github.com/boilerplate/backend/app/rest"
 )
 
 // JSON is a map alias, just for convenience
@@ -59,7 +57,6 @@ type LoggerFlag int
 // logger flags enum
 const (
 	LogAll LoggerFlag = iota
-	LogUser
 	LogBody
 	LogNone
 )
@@ -81,7 +78,7 @@ func Logger(ipFn func(ip string) string, flags ...LoggerFlag) func(http.Handler)
 			}
 
 			ww := middleware.NewWrapResponseWriter(w, 1)
-			body, user := getBodyAndUser(r, flags)
+			body := getBody(r, flags)
 			t1 := time.Now()
 			defer func() {
 				t2 := time.Now()
@@ -100,8 +97,8 @@ func Logger(ipFn func(ip string) string, flags ...LoggerFlag) func(http.Handler)
 					remoteIP = ipFn(remoteIP)
 				}
 
-				log.Printf("[INFO] REST %s %s - %s - %s - %d (%d) - %v %s %s",
-					r.Proto, r.Method, q, remoteIP, ww.Status(), ww.BytesWritten(), t2.Sub(t1), user, body)
+				log.Printf("[INFO] REST %s %s - %s - %s - %d (%d) - %v %s",
+					r.Proto, r.Method, q, remoteIP, ww.Status(), ww.BytesWritten(), t2.Sub(t1), body)
 			}()
 
 			h.ServeHTTP(ww, r)
@@ -112,10 +109,10 @@ func Logger(ipFn func(ip string) string, flags ...LoggerFlag) func(http.Handler)
 	return f
 }
 
-func getBodyAndUser(r *http.Request, flags []LoggerFlag) (body string, user string) {
+func getBody(r *http.Request, flags []LoggerFlag) (body string) {
 	ctx := r.Context()
 	if ctx == nil {
-		return "", ""
+		return ""
 	}
 
 	if inLogFlags(LogBody, flags) {
@@ -140,15 +137,7 @@ func getBodyAndUser(r *http.Request, flags []LoggerFlag) (body string, user stri
 		}
 	}
 
-	if inLogFlags(LogUser, flags) {
-		u, err := rest.GetUserInfo(r)
-
-		if err == nil {
-			user = fmt.Sprintf("- user.id=%s", u.ID)
-		}
-	}
-
-	return body, user
+	return body
 }
 
 func sanitizeQuery(u string) string {

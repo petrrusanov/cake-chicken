@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/logutils"
 	"github.com/jessevdk/go-flags"
 
-	"github.com/boilerplate/backend/app/cmd"
-	"github.com/boilerplate/backend/app/utils"
+	"github.com/dimebox/cake-chicken/app/cmd"
+	"github.com/dimebox/cake-chicken/app/utils"
 )
 
 // Opts with all cli commands and flags
@@ -26,7 +26,7 @@ var revision = "unknown"
 func main() {
 	utils.InitRandom()
 
-	fmt.Printf("Backend %s\n", revision)
+	fmt.Printf("Cake and chicken %s\n", revision)
 	cmd.Revision = revision
 
 	var opts Opts
