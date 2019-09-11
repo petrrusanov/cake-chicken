@@ -45,9 +45,21 @@ func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.Status(r, http.StatusCreated)
+	render.Status(r, http.StatusOK)
 
-	err = renderJSON(w, r, chickenCounter)
+	var chickenText string
+
+	if chickenCounter.Count == 1 {
+		chickenText = "chicken"
+	} else {
+		chickenText = "chickens"
+	}
+
+	response := SlackTextResponse{
+		Text: fmt.Sprintf("More chicken! <%s> now owes %d %s", chickenCounter.Username, chickenCounter.Count, chickenText),
+	}
+
+	err = renderJSON(w, r, response)
 
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
@@ -92,9 +104,21 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.Status(r, http.StatusCreated)
+	render.Status(r, http.StatusOK)
 
-	err = renderJSON(w, r, chickenCounter)
+	var chickenText string
+
+	if chickenCounter.Count == 1 {
+		chickenText = "chicken"
+	} else {
+		chickenText = "chickens"
+	}
+
+	response := SlackTextResponse{
+		Text: fmt.Sprintf("Hope it was good! <%s> now owes %d %s", chickenCounter.Username, chickenCounter.Count, chickenText),
+	}
+
+	err = renderJSON(w, r, response)
 
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")

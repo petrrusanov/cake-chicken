@@ -63,9 +63,21 @@ func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.Status(r, http.StatusCreated)
+	render.Status(r, http.StatusOK)
 
-	err = renderJSON(w, r, cakeCounter)
+	var cakeText string
+
+	if cakeCounter.Count == 1 {
+		cakeText = "cake"
+	} else {
+		cakeText = "cakes"
+	}
+
+	response := SlackTextResponse{
+		Text: fmt.Sprintf("Yay, more cakes are coming! <%s> now owes %d %s", cakeCounter.Username, cakeCounter.Count, cakeText),
+	}
+
+	err = renderJSON(w, r, response)
 
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
@@ -110,9 +122,21 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.Status(r, http.StatusCreated)
+	render.Status(r, http.StatusOK)
 
-	err = renderJSON(w, r, cakeCounter)
+	var cakeText string
+
+	if cakeCounter.Count == 1 {
+		cakeText = "cake"
+	} else {
+		cakeText = "cakes"
+	}
+
+	response := SlackTextResponse{
+		Text: fmt.Sprintf("Hopefully it was tasty! <%s> now owes %d %s", cakeCounter.Username, cakeCounter.Count, cakeText),
+	}
+
+	err = renderJSON(w, r, response)
 
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")

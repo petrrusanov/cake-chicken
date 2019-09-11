@@ -21,6 +21,10 @@ import (
 
 var usernameRegexp = regexp.MustCompile(`<(@[\d\w]+)(\|[\w\d]+)?>`)
 
+type SlackTextResponse struct {
+	Text string `json:"text"`
+}
+
 // Rest is a rest access server
 type Rest struct {
 	Version       string
