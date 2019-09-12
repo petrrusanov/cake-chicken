@@ -118,7 +118,7 @@ func (s *Store) FulfillChicken(username string, prefix string) (models.UserCount
 		}
 
 		if counter == 0 {
-			return errors.New("counter is already 0")
+			return errors.New("there is no chicken to bring")
 		}
 
 		counter = counter - 1
@@ -252,7 +252,7 @@ func (s *Store) FulfillCake(username string, prefix string) (models.UserCounter,
 		}
 
 		if counter == 0 {
-			return errors.New("counter is already 0")
+			return errors.New("there are no cakes to bring")
 		}
 
 		counter = counter - 1

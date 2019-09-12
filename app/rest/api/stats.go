@@ -41,57 +41,40 @@ func (s *Rest) stats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var builder strings.Builder
-
-	builder.WriteString("*Cakes:*")
-
-	if len(cakeStats) == 0 {
-		builder.WriteString(" none\n")
-	} else {
-		builder.WriteString("\n")
-	}
+	stats := map[string]string{}
 
 	for _, counter := range cakeStats {
-		var cakeText string
-
-		if counter.Count == 1 {
-			cakeText = "cake"
-		} else {
-			cakeText = "cakes"
-		}
-
-		_, err := fmt.Fprintf(&builder, "<%s> owes %d %s\n", counter.Username, counter.Count, cakeText)
-
-		if err != nil {
-			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't format cake stats")
-		}
-	}
-
-	builder.WriteString("\n*Chickens:*")
-
-	if len(chickenStats) == 0 {
-		builder.WriteString(" none\n")
-	} else {
-		builder.WriteString("\n")
+		cakeText := fmt.Sprintf("%s", strings.Repeat(":cake:", counter.Count))
+		stats[counter.Username] = cakeText
 	}
 
 	for _, counter := range chickenStats {
-		var chickenText string
+		chickenText := fmt.Sprintf("%s", strings.Repeat(":poultry_leg:", counter.Count))
 
-		if counter.Count == 1 {
-			chickenText = "chicken"
+		userStats := stats[counter.Username]
+
+		if userStats != "" {
+			userStats = fmt.Sprintf("%s %s", userStats, chickenText)
 		} else {
-			chickenText = "chickens"
+			userStats = chickenText
 		}
 
-		_, err := fmt.Fprintf(&builder, "<%s> owes %d %s\n", counter.Username, counter.Count, chickenText)
+		stats[counter.Username] = userStats
+	}
 
-		if err != nil {
-			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "can't format chicken stats")
+	var builder strings.Builder
+
+	builder.WriteString("*Stats:*\n")
+
+	if len(stats) == 0 {
+		builder.WriteString("There is no cake or chicken to bring :cry:")
+	} else {
+		for username, text := range stats {
+			builder.WriteString(fmt.Sprintf("<%s> %s\n", username, text))
 		}
 	}
 
-	response := SlackTextResponse{
+	response := slackTextResponse{
 		Text: builder.String(),
 	}
 

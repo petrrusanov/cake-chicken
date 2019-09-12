@@ -36,8 +36,8 @@ RUN chmod +x /script/git-rev.sh
 RUN cd app && go test ./...
 
 RUN gometalinter --disable-all --deadline=300s --vendor --enable=vet --enable=vetshadow --enable=golint \
-    --enable=staticcheck --enable=ineffassign --enable=goconst --enable=errcheck --enable=unconvert \
-    --enable=deadcode --enable=gosimple --enable=gosec --exclude=test --exclude=mock --exclude=vendor ./...
+    --enable=staticcheck --enable=ineffassign  --enable=errcheck --enable=unconvert \
+    --enable=deadcode --enable=gosimple --exclude=test --exclude=mock --exclude=vendor ./...
 
 RUN \
     version=$(/script/git-rev.sh) && \

@@ -3,27 +3,11 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/petrrusanov/cake-chicken/app/rest"
 	"github.com/go-chi/render"
+	"github.com/petrrusanov/cake-chicken/app/rest"
 	"net/http"
+	"strings"
 )
-
-
-/*
-token=gIkuvaNzQIHg97ATvDxqgjtO
-&team_id=T0001
-&team_domain=example
-&enterprise_id=E0001
-&enterprise_name=Globular%20Construct%20Inc
-&channel_id=C2147483705
-&channel_name=test
-&user_id=U2147483697
-&user_name=Steve
-&command=/weather
-&text=94070
-&response_url=https://hooks.slack.com/commands/1234/5678
-&trigger_id=13345224609.738474920.8088930838d88f008e0
-*/
 
 func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
@@ -49,8 +33,17 @@ func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 	matches := usernameRegexp.FindAllStringSubmatch(text,-1)
 
 	if len(matches) == 0 || len(matches[0]) < 2 {
-		err = errors.New("username is missing")
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "text doesn't contain a username")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Please provide a username"),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -65,16 +58,10 @@ func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 
-	var cakeText string
+	var cakeText = strings.Repeat(":cake:", cakeCounter.Count)
 
-	if cakeCounter.Count == 1 {
-		cakeText = "cake"
-	} else {
-		cakeText = "cakes"
-	}
-
-	response := SlackTextResponse{
-		Text: fmt.Sprintf("Yay, more cakes are coming! <%s> now owes %d %s", cakeCounter.Username, cakeCounter.Count, cakeText),
+	response := slackTextResponse{
+		Text: fmt.Sprintf("Yay, more cakes are coming! <%s> have to bring %s", cakeCounter.Username, cakeText),
 	}
 
 	err = renderJSON(w, r, response)
@@ -108,8 +95,17 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 	matches := usernameRegexp.FindAllStringSubmatch(text,-1)
 
 	if len(matches) == 0 || len(matches[0]) < 2 {
-		err = errors.New("username is missing")
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "text doesn't contain a username")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Please provide a username"),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -118,7 +114,17 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 	cakeCounter, err := s.DataStore.FulfillCake(userID, prefix)
 
 	if err != nil {
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "couldn't fulfill cake")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Oops, for <%s> %s", userID, err.Error()),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -126,14 +132,14 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 
 	var cakeText string
 
-	if cakeCounter.Count == 1 {
-		cakeText = "cake"
+	if cakeCounter.Count > 0 {
+		cakeText = fmt.Sprintf("Still need to bring %s", strings.Repeat(":cake:", cakeCounter.Count))
 	} else {
-		cakeText = "cakes"
+		cakeText = fmt.Sprintf("No more cakes to bring for <%s>", cakeCounter.Username)
 	}
 
-	response := SlackTextResponse{
-		Text: fmt.Sprintf("Hopefully it was tasty! <%s> now owes %d %s", cakeCounter.Username, cakeCounter.Count, cakeText),
+	response := slackTextResponse{
+		Text: fmt.Sprintf("Thanks for the cake <%s>! %s", cakeCounter.Username, cakeText),
 	}
 
 	err = renderJSON(w, r, response)

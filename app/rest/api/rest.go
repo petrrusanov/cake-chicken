@@ -11,17 +11,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/petrrusanov/cake-chicken/app/store/service"
-	"github.com/petrrusanov/cake-chicken/app/utils"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
+	"github.com/petrrusanov/cake-chicken/app/store/service"
+	"github.com/petrrusanov/cake-chicken/app/utils"
 	"github.com/pkg/errors"
 )
 
 var usernameRegexp = regexp.MustCompile(`<(@[\d\w]+)(\|[\w\d]+)?>`)
 
-type SlackTextResponse struct {
+type slackTextResponse struct {
 	Text string `json:"text"`
 }
 

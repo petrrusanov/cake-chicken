@@ -3,9 +3,10 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/petrrusanov/cake-chicken/app/rest"
 	"github.com/go-chi/render"
+	"github.com/petrrusanov/cake-chicken/app/rest"
 	"net/http"
+	"strings"
 )
 
 func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
@@ -31,8 +32,17 @@ func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
 	matches := usernameRegexp.FindAllStringSubmatch(text,-1)
 
 	if len(matches) == 0 || len(matches[0]) < 2 {
-		err = errors.New("username is missing")
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "text doesn't contain a username")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Please provide a username"),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -47,16 +57,10 @@ func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 
-	var chickenText string
+	chickenText := strings.Repeat(":poultry_leg:", chickenCounter.Count)
 
-	if chickenCounter.Count == 1 {
-		chickenText = "chicken"
-	} else {
-		chickenText = "chickens"
-	}
-
-	response := SlackTextResponse{
-		Text: fmt.Sprintf("More chicken! <%s> now owes %d %s", chickenCounter.Username, chickenCounter.Count, chickenText),
+	response := slackTextResponse{
+		Text: fmt.Sprintf("Chicken is on <%s>! %s", chickenCounter.Username, chickenText),
 	}
 
 	err = renderJSON(w, r, response)
@@ -90,8 +94,17 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 	matches := usernameRegexp.FindAllStringSubmatch(text,-1)
 
 	if len(matches) == 0 || len(matches[0]) < 2 {
-		err = errors.New("username is missing")
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "text doesn't contain a username")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Please provide a username"),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -100,7 +113,17 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 	chickenCounter, err := s.DataStore.FulfillChicken(userID, prefix)
 
 	if err != nil {
-		rest.SendErrorJSON(w, r, http.StatusBadRequest, err, "couldn't fulfill chicken")
+		response := slackTextResponse{
+			Text: fmt.Sprintf("Oops, for <%s> %s", userID, err.Error()),
+		}
+
+		err = renderJSON(w, r, response)
+
+		if err != nil {
+			rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "json render error")
+			return
+		}
+
 		return
 	}
 
@@ -108,14 +131,14 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 
 	var chickenText string
 
-	if chickenCounter.Count == 1 {
-		chickenText = "chicken"
+	if chickenCounter.Count > 0 {
+		chickenText = fmt.Sprintf("Still need to bring %s", strings.Repeat(":poultry_leg:", chickenCounter.Count))
 	} else {
-		chickenText = "chickens"
+		chickenText = fmt.Sprintf("No more chicken to bring for <%s>", chickenCounter.Username)
 	}
 
-	response := SlackTextResponse{
-		Text: fmt.Sprintf("Hope it was good! <%s> now owes %d %s", chickenCounter.Username, chickenCounter.Count, chickenText),
+	response := slackTextResponse{
+		Text: fmt.Sprintf("Thanks for the chicken <%s>! %s", chickenCounter.Username, chickenText),
 	}
 
 	err = renderJSON(w, r, response)
