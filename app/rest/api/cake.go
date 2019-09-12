@@ -35,6 +35,7 @@ func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 	if len(matches) == 0 || len(matches[0]) < 2 {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Please provide a username"),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -62,6 +63,7 @@ func (s *Rest) addCake(w http.ResponseWriter, r *http.Request) {
 
 	response := slackTextResponse{
 		Text: fmt.Sprintf("Yay, more cakes are coming! <%s> have to bring %s", cakeCounter.Username, cakeText),
+		ResponseType: InChannelResponse,
 	}
 
 	err = renderJSON(w, r, response)
@@ -97,6 +99,7 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 	if len(matches) == 0 || len(matches[0]) < 2 {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Please provide a username"),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -116,6 +119,7 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Oops, for <%s> %s", userID, err.Error()),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -140,6 +144,7 @@ func (s *Rest) fulfillCake(w http.ResponseWriter, r *http.Request) {
 
 	response := slackTextResponse{
 		Text: fmt.Sprintf("Thanks for the cake <%s>! %s", cakeCounter.Username, cakeText),
+		ResponseType: InChannelResponse,
 	}
 
 	err = renderJSON(w, r, response)

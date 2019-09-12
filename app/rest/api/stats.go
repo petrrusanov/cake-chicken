@@ -76,6 +76,7 @@ func (s *Rest) stats(w http.ResponseWriter, r *http.Request) {
 
 	response := slackTextResponse{
 		Text: builder.String(),
+		ResponseType: InChannelResponse,
 	}
 
 	err = renderJSON(w, r, response)

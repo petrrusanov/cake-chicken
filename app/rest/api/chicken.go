@@ -34,6 +34,7 @@ func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
 	if len(matches) == 0 || len(matches[0]) < 2 {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Please provide a username"),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -61,6 +62,7 @@ func (s *Rest) addChicken(w http.ResponseWriter, r *http.Request) {
 
 	response := slackTextResponse{
 		Text: fmt.Sprintf("Chicken is on <%s>! %s", chickenCounter.Username, chickenText),
+		ResponseType: InChannelResponse,
 	}
 
 	err = renderJSON(w, r, response)
@@ -96,6 +98,7 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 	if len(matches) == 0 || len(matches[0]) < 2 {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Please provide a username"),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -115,6 +118,7 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response := slackTextResponse{
 			Text: fmt.Sprintf("Oops, for <%s> %s", userID, err.Error()),
+			ResponseType: EphemeralResponse,
 		}
 
 		err = renderJSON(w, r, response)
@@ -139,6 +143,7 @@ func (s *Rest) fulfillChicken(w http.ResponseWriter, r *http.Request) {
 
 	response := slackTextResponse{
 		Text: fmt.Sprintf("Thanks for the chicken <%s>! %s", chickenCounter.Username, chickenText),
+		ResponseType: InChannelResponse,
 	}
 
 	err = renderJSON(w, r, response)

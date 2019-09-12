@@ -21,8 +21,19 @@ import (
 
 var usernameRegexp = regexp.MustCompile(`<(@[\d\w]+)(\|[\w\d]+)?>`)
 
+// SlackResponseType response type
+type SlackResponseType string
+
+const (
+	// InChannelResponse in channel responses
+	InChannelResponse SlackResponseType = "in_channel"
+	// EphemeralResponse responses visible only to sender
+	EphemeralResponse SlackResponseType = "ephemeral"
+)
+
 type slackTextResponse struct {
 	Text string `json:"text"`
+	ResponseType SlackResponseType `json:"response_type"`
 }
 
 // Rest is a rest access server
