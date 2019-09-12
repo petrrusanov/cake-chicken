@@ -44,12 +44,12 @@ func (s *Rest) stats(w http.ResponseWriter, r *http.Request) {
 	stats := map[string]string{}
 
 	for _, counter := range cakeStats {
-		cakeText := fmt.Sprintf("%s", strings.Repeat(":cake:", counter.Count))
+		cakeText := strings.Repeat(":cake:", counter.Count)
 		stats[counter.Username] = cakeText
 	}
 
 	for _, counter := range chickenStats {
-		chickenText := fmt.Sprintf("%s", strings.Repeat(":poultry_leg:", counter.Count))
+		chickenText := strings.Repeat(":poultry_leg:", counter.Count)
 
 		userStats := stats[counter.Username]
 
